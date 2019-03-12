@@ -10,136 +10,136 @@ import vulcanize from 'gulp-vulcanize';
 import crisper from './';
 
 function copyTestFile(src, dest) {
-	fs.writeFileSync(dest, fs.readFileSync(src, 'utf8'));
+  fs.writeFileSync(dest, fs.readFileSync(src, 'utf8'));
 }
 
-test.beforeEach.cb(t => {
-	rimraf.sync('tmp');
-	mkdirp.sync('tmp/dist');
+test.beforeEach.cb((t) => {
+  rimraf.sync('tmp');
+  mkdirp.sync('tmp/dist');
 
-	copyTestFile('fixture/index.html', path.join('tmp', 'index.html'));
-	copyTestFile('fixture/import.html', path.join('tmp', 'import.html'));
+  copyTestFile('fixture/index.html', path.join('tmp', 'index.html'));
+  copyTestFile('fixture/import.html', path.join('tmp', 'import.html'));
 
-	var stream = vulcanize();
+  const stream = vulcanize();
 
-	stream.on('data', function (file) {
-		fs.writeFileSync(path.join('tmp', 'vulcanize.html'), file.contents);
-	});
+  stream.on('data', function(file) {
+    fs.writeFileSync(path.join('tmp', 'vulcanize.html'), file.contents);
+  });
 
-	stream.on('end', t.end);
+  stream.on('end', t.end);
 
-	stream.write(new gutil.File({
-		cwd: __dirname,
-		base: path.join(__dirname, 'tmp'),
-		path: path.join('tmp', 'index.html'),
-		contents: fs.readFileSync(path.join('tmp', 'index.html'))
-	}));
+  stream.write(new gutil.File({
+    cwd: __dirname,
+    base: path.join(__dirname, 'tmp'),
+    path: path.join('tmp', 'index.html'),
+    contents: fs.readFileSync(path.join('tmp', 'index.html'))
+  }));
 
-	stream.end();
+  stream.end();
 });
 
-test.cb('simple-usage', t => {
-	var stream = crisper();
+test.cb('simple-usage', (t) => {
+  const stream = crisper();
 
-	stream.on('data', function (file) {
-		var contents = file.contents.toString();
-		var rex = {
-			js: /Polymer\({/,
-			html: /<script src=\"vulcanize.js\".*><\/script>/
-		};
+  stream.on('data', function(file) {
+    const contents = file.contents.toString();
+    const rex = {
+      js: /Polymer\({/,
+      html: /<script src=\"vulcanize.js\".*><\/script>/
+    };
 
-		if (/\.html$/.test(file.path)) {
-			t.ok(rex.html.test(contents));
-		} else if (/\.js$/.test(file.path)) {
-			t.ok(rex.js.test(contents));
-		} else {
-			t.ok(null);
-		}
-	});
+    if (/\.html$/.test(file.path)) {
+      t.true(rex.html.test(contents));
+    } else if (/\.js$/.test(file.path)) {
+      t.true(rex.js.test(contents));
+    } else {
+      t.pass();
+    }
+  });
 
-	stream.on('end', t.end);
+  stream.on('end', t.end);
 
-	stream.write(new gutil.File({
-		cwd: __dirname,
-		base: path.join(__dirname, 'tmp'),
-		path: path.join('tmp', 'vulcanize.html'),
-		contents: fs.readFileSync(path.join('tmp', 'vulcanize.html'))
-	}));
+  stream.write(new gutil.File({
+    cwd: __dirname,
+    base: path.join(__dirname, 'tmp'),
+    path: path.join('tmp', 'vulcanize.html'),
+    contents: fs.readFileSync(path.join('tmp', 'vulcanize.html'))
+  }));
 
-	stream.end();
+  stream.end();
 });
 
-test.cb('options test: scriptInHead', t => {
-	var stream = crisper({
-		scriptInHead: Boolean
-	});
+test.cb('options test: scriptInHead', (t) => {
+  const stream = crisper({
+    scriptInHead: Boolean
+  });
 
-	stream.on('data', function (file) {
-		var contents = file.contents.toString();
+  stream.on('data', function(file) {
+    const contents = file.contents.toString();
 
-		if (/\.html$/.test(file.path)) {
-			t.ok(/defer=/g.test(contents));
-		}
-	});
+    if (/\.html$/.test(file.path)) {
+      t.true(/defer=/g.test(contents));
+    }
+  });
 
-	stream.on('end', t.end);
+  stream.on('end', t.end);
 
-	stream.write(new gutil.File({
-		cwd: __dirname,
-		base: path.join(__dirname, 'tmp'),
-		path: path.join('tmp', 'vulcanize.html'),
-		contents: fs.readFileSync(path.join('tmp', 'vulcanize.html'))
-	}));
+  stream.write(new gutil.File({
+    cwd: __dirname,
+    base: path.join(__dirname, 'tmp'),
+    path: path.join('tmp', 'vulcanize.html'),
+    contents: fs.readFileSync(path.join('tmp', 'vulcanize.html'))
+  }));
 
-	stream.end();
+  stream.end();
 });
 
-test.cb('options test: onlySplit', t => {
-	var stream = crisper({
-		onlySplit: Boolean
-	});
+test.cb('options test: onlySplit', (t) => {
+  const stream = crisper({
+    onlySplit: Boolean
+  });
 
-	stream.on('data', function (file) {
-		var contents = file.contents.toString();
+  stream.on('data', function(file) {
+    const contents = file.contents.toString();
 
-		if (/\.html$/.test(file.path)) {
-			t.ok(!/<script/.test(contents));
-		}
-	});
+    if (/\.html$/.test(file.path)) {
+      t.true(!/<script/.test(contents));
+    }
+  });
 
-	stream.on('end', t.end);
+  stream.on('end', t.end);
 
-	stream.write(new gutil.File({
-		cwd: __dirname,
-		base: path.join(__dirname, 'tmp'),
-		path: path.join('tmp', 'vulcanize.html'),
-		contents: fs.readFileSync(path.join('tmp', 'vulcanize.html'))
-	}));
+  stream.write(new gutil.File({
+    cwd: __dirname,
+    base: path.join(__dirname, 'tmp'),
+    path: path.join('tmp', 'vulcanize.html'),
+    contents: fs.readFileSync(path.join('tmp', 'vulcanize.html'))
+  }));
 
-	stream.end();
+  stream.end();
 });
 
-test.cb('options test: jsFileName', t => {
-	var stream = crisper({
-		jsFileName: 'script/new-script.js'
-	});
+test.cb('options test: jsFileName', (t) => {
+  const stream = crisper({
+    jsFileName: 'script/new-script.js'
+  });
 
-	stream.on('data', function (file) {
-		var contents = file.contents.toString();
+  stream.on('data', function(file) {
+    const contents = file.contents.toString();
 
-		if (/\.html$/.test(file.path)) {
-			t.ok(/script\/new-script.js/.test(contents));
-		}
-	});
+    if (/\.html$/.test(file.path)) {
+      t.true(/script\/new-script.js/.test(contents));
+    }
+  });
 
-	stream.on('end', t.end);
+  stream.on('end', t.end);
 
-	stream.write(new gutil.File({
-		cwd: __dirname,
-		base: path.join(__dirname, 'tmp'),
-		path: path.join('tmp', 'vulcanize.html'),
-		contents: fs.readFileSync(path.join('tmp', 'vulcanize.html'))
-	}));
+  stream.write(new gutil.File({
+    cwd: __dirname,
+    base: path.join(__dirname, 'tmp'),
+    path: path.join('tmp', 'vulcanize.html'),
+    contents: fs.readFileSync(path.join('tmp', 'vulcanize.html'))
+  }));
 
-	stream.end();
+  stream.end();
 });

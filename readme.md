@@ -8,7 +8,7 @@
 ## Install
 
 ```
-$ npm install --save-dev gulp-crisper
+$ npm install --save-dev @advances-rest-client/gulp-crisper
 ```
 
 
@@ -17,7 +17,7 @@ $ npm install --save-dev gulp-crisper
 ```js
 var gulp = require('gulp');
 var vulcanize = require('gulp-vulcanize');
-var crisper = require('gulp-crisper');
+var crisper = require('@advances-rest-client/gulp-crisper');
 
 gulp.task('default', function () {
 	return gulp.src('src/index.html')
