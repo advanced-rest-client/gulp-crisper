@@ -1,5 +1,5 @@
 {
-  "name": "@advances-rest-client/gulp-crisper",
+  "name": "@advanced-rest-client/gulp-crisper",
   "version": "2.0.0",
   "description": "Gulp plugin for crisper that split inline scripts from an HTML file for CSP compliance",
   "license": "MIT",
@@ -7,7 +7,7 @@
     "name": "ragingwind",
     "email": "ragingwind@gmail.com"
   },
-  "repository": "advances-rest-client/gulp-crisper",
+  "repository": "advanced-rest-client/gulp-crisper",
   "engines": {
     "node": ">=6.0.0"
   },
